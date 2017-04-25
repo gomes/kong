@@ -2,20 +2,22 @@ package kong
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/dghubble/sling"
 )
 
 type API struct {
-	Id           string `json:"id,omitempty"`
-	CreatedAt    int    `json:"created_at,omitempty"`
-	Name         string `json:"name,omitempty"`
-	PreserveHost bool   `json:"preserve_host,omitempty"`
-	Hosts        string `json:"hosts,omitempty"`
-	Uris         string `json:"uris,omitempty"`
-	StripUri     bool   `json:"strip_uri,omitempty"`
-	UpstreamURL  string `json:"upstream_url"`
+	Id           string   `json:"id,omitempty"`
+	CreatedAt    int      `json:"created_at,omitempty"`
+	Name         string   `json:"name,omitempty"`
+	PreserveHost bool     `json:"preserve_host,omitempty"`
+	Hosts        []string `json:"hosts,omitempty"`
+	Uris         string   `json:"uris,omitempty"`
+	StripUri     bool     `json:"strip_uri,omitempty"`
+	UpstreamURL  string   `json:"upstream_url"`
 }
+
 type APIList struct {
 	Data  []API  `json:"data"`
 	Next  string `json:"next"`
@@ -49,7 +51,7 @@ func (s *APIService) Add(name, Hosts, Uris, upstreamURL string, stripUri, preser
 		api.Name = name
 	}
 	if len(Hosts) > 0 {
-		api.Hosts = Hosts
+		api.Hosts = strings.Split(Hosts, ",")
 	}
 	if len(Uris) > 0 {
 		api.Uris = Uris
@@ -75,7 +77,7 @@ func (s *APIService) Update(id, name, Hosts, Uris, upstreamURL string, stripUri,
 		updateCriteria = id
 	}
 	if len(Hosts) > 0 {
-		api.Hosts = Hosts
+		api.Hosts = strings.Split(Hosts, ",")
 	}
 	if len(Uris) > 0 {
 		api.Uris = Uris
@@ -98,7 +100,7 @@ func (s *APIService) AddOrUpdate(id, name, Hosts, Uris, upstreamURL string, stri
 		api.Name = name
 	}
 	if len(Hosts) > 0 {
-		api.Hosts = Hosts
+		api.Hosts = strings.Split(Hosts, ",")
 	}
 	if len(Uris) > 0 {
 		api.Uris = Uris

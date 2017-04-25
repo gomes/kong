@@ -52,17 +52,17 @@ func TestAddAPI(t *testing.T) {
 
 func TestUpdateAPI(t *testing.T) {
 	client := getClient()
-	addAPI, _, _ := client.APIService.Add("ApiTest", "", "/test", "http://localhost:8080/testing", false, false)
+	addAPI, _, err := client.APIService.Add("ApiTest", "test.api.com", "", "http://localhost:8080/testing", false, false)
 	pretty.Println(addAPI)
 
-	updateAPI, _, _ := client.APIService.Update(addAPI.Id, "ApiTest", "", "/testupdate", "http://localhost:8080/testing", false, false)
+	updateAPI, _, err := client.APIService.Update(addAPI.Id, "ApiTest", "testupdate.api.com", "", "http://localhost:8080/testing", false, false)
 	pretty.Println(updateAPI)
 
-	getAPI, _, _ := client.APIService.Get("ApiTest")
-	pretty.Println(getAPI)
+	getAPI, _, err := client.APIService.Get("ApiTest")
+	pretty.Println(getAPI.Hosts)
 
 	client.APIService.Delete("ApiTest")
-	if addAPI.Uris == getAPI.Uris {
+	if err != nil {
 		t.Error("ApiTest added with RequestPath ", addAPI.Uris, "Get returned ", getAPI.Uris)
 	}
 }
