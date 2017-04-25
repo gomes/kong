@@ -63,6 +63,32 @@ func (s *APIService) Add(name, Hosts, Uris, upstreamURL string, stripUri, preser
 	return api, resp, err
 }
 
+func (s *APIService) Update(id, name, Hosts, Uris, upstreamURL string, stripUri, preserveHost bool) (*API, *http.Response, error) {
+	api := new(API)
+	updateCriteria := ""
+	if len(name) > 0 {
+		api.Name = name
+		updateCriteria = name
+	}
+	if len(id) > 0 {
+		api.Id = id
+		updateCriteria = id
+	}
+	if len(Hosts) > 0 {
+		api.Hosts = Hosts
+	}
+	if len(Uris) > 0 {
+		api.Uris = Uris
+	}
+	api.UpstreamURL = upstreamURL
+	api.StripUri = stripUri
+	api.PreserveHost = preserveHost
+
+	resp, err := s.sling.New().Patch("/apis/" + updateCriteria).BodyJSON(api).ReceiveSuccess(api)
+
+	return api, resp, err
+}
+
 func (s *APIService) AddOrUpdate(id, name, Hosts, Uris, upstreamURL string, stripUri, preserveHost bool, createdAt int) (*API, *http.Response, error) {
 	api := new(API)
 	if len(id) > 0 {

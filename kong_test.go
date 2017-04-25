@@ -8,7 +8,7 @@ import (
 
 func getClient() *Client {
 
-	return NewClient(nil, "http://10.13.172.10:8001/")
+	return NewClient(nil, "http://localhost:8001/")
 }
 func TestNodeInformation(t *testing.T) {
 	client := getClient()
@@ -51,6 +51,23 @@ func TestAddAPI(t *testing.T) {
 }
 
 func TestUpdateAPI(t *testing.T) {
+	client := getClient()
+	addAPI, _, _ := client.APIService.Add("ApiTest", "", "/test", "http://localhost:8080/testing", false, false)
+	pretty.Println(addAPI)
+
+	updateAPI, _, _ := client.APIService.Update(addAPI.Id, "ApiTest", "", "/testupdate", "http://localhost:8080/testing", false, false)
+	pretty.Println(updateAPI)
+
+	getAPI, _, _ := client.APIService.Get("ApiTest")
+	pretty.Println(getAPI)
+
+	client.APIService.Delete("ApiTest")
+	if addAPI.Uris == getAPI.Uris {
+		t.Error("ApiTest added with RequestPath ", addAPI.Uris, "Get returned ", getAPI.Uris)
+	}
+}
+
+func TestAddOrUpdateAPI(t *testing.T) {
 	client := getClient()
 	addAPI, _, _ := client.APIService.Add("ApiTest", "", "/test", "http://localhost:8080/testing", false, false)
 	pretty.Println(addAPI)
