@@ -36,7 +36,7 @@ func NewConsumerService(httpClient *http.Client, baseUrl string) *ConsumerServic
 
 func (s *ConsumerService) Get(name string) (*Consumer, *http.Response, error) {
 	consumer := new(Consumer)
-	resp, err := s.sling.New().Path("/consumers").Path(name).ReceiveSuccess(consumer)
+	resp, err := s.sling.New().Path("/consumers/" + name).Path(name).ReceiveSuccess(consumer)
 	return consumer, resp, err
 }
 
